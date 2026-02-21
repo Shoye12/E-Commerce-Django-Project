@@ -1,0 +1,45 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    
+    <div class="row">
+        <div class="col-md-6 mb-4 text-center">
+            <div class="card shadow-sm border-0 p-3">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded" style="max-height: 500px; object-fit: contain;">
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <h1 class="display-5 fw-bold mb-3">{{ product.name }}</h1>
+            
+            <span class="badge bg-secondary mb-3 fs-6">{{ product.category.name }}</span>
+            
+            <h2 class="text-success fw-bold mb-4">₹{{ product.price }}</h2>
+            
+            <p class="lead text-muted mb-4">
+                {{ product.description | default:"A high-quality product ready for your home. Excellent value and top-tier materials." }}
+            </p>
+            
+            <hr class="mb-4">
+            
+            <form action="" method="POST" class="d-flex align-items-center mt-4">
+                {% csrf_token %}
+                
+                <input hidden type="text" name="product" value="{{ product.id }}">
+                
+                <label for="quantity" class="me-3 fw-bold mb-0">Qty:</label>
+                <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control me-3" style="width: 80px;">
+                
+                {% if already_in_cart %}
+                    <a href="/cart/" class="btn btn-warning btn-lg w-100 shadow-sm text-dark fw-bold">🚀 Go To Cart</a>
+                {% else %}
+                    <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">🛒 Add to Cart</button>
+                {% endif %}
+            </form>
+            
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

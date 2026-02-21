@@ -1,0 +1,130 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}My Cart{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    
+    <div class="border rounded p-4 shadow-sm bg-white">
+        <p class="display-6 fw-bold mb-4 border-bottom pb-2">🛒 My Cart</p>
+        
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">S.No</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col" class="text-center">Quantity</th>
+                        <th scope="col">Total</th>
+                        <th scope="col" class="text-center">Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        
+                        <td>
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                 class="rounded-circle shadow-sm" style="height: 60px; width: 60px; object-fit: cover;">
+                        </td>
+                        
+                        <td class="fw-bold">{{ item.product.name }}</td>
+                        <td class="text-success fw-bold">₹{{ item.product.price }}</td>
+                        
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <a href="#" class="btn btn-sm btn-outline-secondary minus-cart" pid="{{ item.product.id }}">-</a>
+                                <span class="mx-3 fw-bold fs-5" id="quantity{{ item.product.id }}">{{ item.quantity }}</span>
+                                <a href="#" class="btn btn-sm btn-outline-secondary plus-cart" pid="{{ item.product.id }}">+</a>
+                            </div>
+                        </td>
+                        
+                        <td class="fw-bold">
+                            ₹<span id="item-total-{{ item.product.id }}">{{ item.total_cost }}</span> 
+                        </td>
+                        
+                        <td class="text-center">
+                            <a href="#" class="btn btn-sm btn-danger shadow-sm px-3 remove-cart" pid="{{ item.product.id }}">Delete</a>
+                        </td>
+                    </tr>
+                    
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <h4>Your cart is empty!</h4>
+                            <a href="/" class="btn btn-primary mt-3">Start Shopping</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if cart_items %}
+        <div class="mt-4 text-end">
+            <hr>
+            <h4 class="fw-bold mb-3">Cart Total: <span class="text-success" id="cart-total">₹{{ total_amount }}</span></h4>
+            <a href="/checkout/" class="btn btn-info btn-lg rounded-pill px-5 shadow-sm text-white fw-bold">
+            Proceed to Checkout ➡️
+            </a>
+        </div>
+        {% endif %}
+        
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$('.plus-cart').click(function(e) {
+        e.preventDefault(); 
+        var id = $(this).attr("pid").toString(); 
+        $.ajax({
+            type: "GET",
+            url: "/pluscart/",
+            data: { prod_id: id },
+            success: function(data) {
+                document.getElementById("quantity" + id).innerText = data.quantity;
+                document.getElementById("item-total-" + id).innerText = data.item_total;
+                document.getElementById("cart-total").innerText = "₹" + data.total_amount;
+            }
+        })
+    });
+
+    $('.minus-cart').click(function(e) {
+        e.preventDefault(); 
+        var id = $(this).attr("pid").toString(); 
+        $.ajax({
+            type: "GET",
+            url: "/minuscart/",
+            data: { prod_id: id },
+            success: function(data) {
+                document.getElementById("quantity" + id).innerText = data.quantity;
+                document.getElementById("item-total-" + id).innerText = data.item_total;
+                document.getElementById("cart-total").innerText = "₹" + data.total_amount;
+            }
+        })
+    });
+
+    $('.remove-cart').click(function(e) {
+        e.preventDefault(); 
+        var id = $(this).attr("pid").toString(); 
+        var row = this; 
+        
+        $.ajax({
+            type: "GET",
+            url: "/removecart/",
+            data: { prod_id: id },
+            success: function(data) {
+                row.closest("tr").remove();
+                document.getElementById("cart-total").innerText = "₹" + data.total_amount;
+            }
+        })
+    });
+</script>
+</script>
+{% endblock %}
