@@ -34,9 +34,9 @@ cd E-Commerce-Django-Project
     # Windows: venv\Scripts\activate
     # Mac/Linux: source venv/bin/activate
 
-**3. Install Django**
+**3. Install Django and Pillow (Required for images)**
     
-    pip install django
+    pip install django pillow
 
 **4. Set up the database**
     
