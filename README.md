@@ -22,6 +22,9 @@ I built this full-stack e-commerce website from scratch using Python and Django.
 ## 💻 Want to run it locally?
 
 If you want to download my code and run the store on your own computer, just follow these steps:
+**0. Install Python**
+If you don't have Python installed yet, download it from [python.org](https://www.python.org/downloads/). 
+*(⚠️ **Windows Users:** Make sure to check the box that says "Add Python to PATH" during the installation process!)*
 
 **1. Clone this repository**
 
